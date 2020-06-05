@@ -1399,6 +1399,16 @@ extern gtime_t timeadd(gtime_t t, double sec)
     t.sec+=sec; tt=floor(t.sec); t.time+=(int)tt; t.sec-=tt;
     return t;
 }
+gtime_t operator+(const gtime_t& t, double sec)
+{
+   gtime_t t1=t;
+   t1.sec += sec; double tt = floor(t1.sec); t1.time += (int)tt; t1.sec -= tt;
+   return t1;
+}
+gtime_t operator+(double sec, const gtime_t& t)
+{
+   return (t + sec);
+}
 /* time difference -------------------------------------------------------------
 * difference between gtime_t structs
 * args   : gtime_t t1,t2    I   gtime_t structs
@@ -1407,6 +1417,10 @@ extern gtime_t timeadd(gtime_t t, double sec)
 extern double timediff(gtime_t t1, gtime_t t2)
 {
     return difftime(t1.time,t2.time)+t1.sec-t2.sec;
+}
+double operator-(const gtime_t& t1, const gtime_t& t2)
+{
+   return difftime(t1.time, t2.time) + t1.sec - t2.sec;
 }
 /* get current time in utc -----------------------------------------------------
 * get current time in utc
