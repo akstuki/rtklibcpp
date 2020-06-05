@@ -998,7 +998,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
         tracelevel(sopt->trace);
     }
     /* read ionosphere data file */
-    if (*fopt->iono&&(ext=strrchr(fopt->iono,'.'))) {
+    if (*fopt->iono&&(ext=(char*)strrchr(fopt->iono,'.'))) {
         if (strlen(ext)==4&&(ext[3]=='i'||ext[3]=='I')) {
             reppath(fopt->iono,path,ts,"","");
             readtec(path,&navs,1);

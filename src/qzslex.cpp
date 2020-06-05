@@ -416,7 +416,7 @@ extern int lexreadmsg(const char *file, int sel, lex_t *lex)
     
     trace(3,"readmsgs: file=%s sel=%d\n",file,sel);
     
-    if (!(p=strrchr(file,'.'))||(strcmp(p,".lex")&&strcmp(p,".LEX"))) return 0;
+    if (!(p=(char*)strrchr(file,'.'))||(strcmp(p,".lex")&&strcmp(p,".LEX"))) return 0;
     
     if (!(fp=fopen(file,"r"))) {
         trace(2,"lex message log open error: %s\n",file);
