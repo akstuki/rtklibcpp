@@ -44,6 +44,9 @@
 #else
 #include <pthread.h>
 #endif
+
+#include "gpstime.h"
+#include "obs_t.h"
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
@@ -80,21 +83,21 @@
 
 #define MAXFREQ     7                   /* max NFREQ */
 
-#define FREQ1       1.57542E9           /* L1/E1  frequency (Hz) */
-#define FREQ2       1.22760E9           /* L2     frequency (Hz) */
-#define FREQ5       1.17645E9           /* L5/E5a frequency (Hz) */
-#define FREQ6       1.27875E9           /* E6/LEX frequency (Hz) */
-#define FREQ7       1.20714E9           /* E5b    frequency (Hz) */
-#define FREQ8       1.191795E9          /* E5a+b  frequency (Hz) */
-#define FREQ9       2.492028E9          /* S      frequency (Hz) */
-#define FREQ1_GLO   1.60200E9           /* GLONASS G1 base frequency (Hz) */
-#define DFRQ1_GLO   0.56250E6           /* GLONASS G1 bias frequency (Hz/n) */
-#define FREQ2_GLO   1.24600E9           /* GLONASS G2 base frequency (Hz) */
-#define DFRQ2_GLO   0.43750E6           /* GLONASS G2 bias frequency (Hz/n) */
-#define FREQ3_GLO   1.202025E9          /* GLONASS G3 frequency (Hz) */
-#define FREQ1_CMP   1.561098E9          /* BeiDou B1 frequency (Hz) */
-#define FREQ2_CMP   1.20714E9           /* BeiDou B2 frequency (Hz) */
-#define FREQ3_CMP   1.26852E9           /* BeiDou B3 frequency (Hz) */
+constexpr double FREQ1     = 1.57542E9;           /* L1/E1  frequency (Hz) */
+constexpr double FREQ2     = 1.22760E9 ;          /* L2     frequency (Hz) */
+constexpr double FREQ5     = 1.17645E9 ;          /* L5/E5a frequency (Hz) */
+constexpr double FREQ6     = 1.27875E9 ;          /* E6/LEX frequency (Hz) */
+constexpr double FREQ7     = 1.20714E9 ;          /* E5b    frequency (Hz) */
+constexpr double FREQ8     = 1.191795E9;          /* E5a+b  frequency (Hz) */
+constexpr double FREQ9     = 2.492028E9;          /* S      frequency (Hz) */
+constexpr double FREQ1_GLO = 1.60200E9 ;          /* GLONASS G1 base frequency (Hz) */
+constexpr double DFRQ1_GLO = 0.56250E6 ;          /* GLONASS G1 bias frequency (Hz/n) */
+constexpr double FREQ2_GLO = 1.24600E9 ;          /* GLONASS G2 base frequency (Hz) */
+constexpr double DFRQ2_GLO = 0.43750E6 ;          /* GLONASS G2 bias frequency (Hz/n) */
+constexpr double FREQ3_GLO = 1.202025E9;          /* GLONASS G3 frequency (Hz) */
+constexpr double FREQ1_CMP = 1.561098E9;          /* BeiDou B1 frequency (Hz) */
+constexpr double FREQ2_CMP = 1.20714E9 ;          /* BeiDou B2 frequency (Hz) */
+constexpr double FREQ3_CMP = 1.26852E9 ;          /* BeiDou B3 frequency (Hz) */
 
 #define EFACT_GPS   1.0                 /* error factor: GPS */
 #define EFACT_GLO   1.5                 /* error factor: GLONASS */
@@ -123,14 +126,7 @@
 #define TSYS_CMP    5                   /* time system: BeiDou time */
 #define TSYS_IRN    6                   /* time system: IRNSS time */
 
-#ifndef NFREQ
-#define NFREQ       3                   /* number of carrier frequencies */
-#endif
-#define NFREQGLO    2                   /* number of carrier frequencies of GLONASS */
 
-#ifndef NEXOBS
-#define NEXOBS      0                   /* number of extended obs codes */
-#endif
 
 #define MINPRNGPS   1                   /* min satellite PRN number of GPS */
 #define MAXPRNGPS   32                  /* max satellite PRN number of GPS */
@@ -524,28 +520,6 @@
 #endif
 
 /* type definitions ----------------------------------------------------------*/
-
-typedef struct {        /* time struct */
-    time_t time;        /* time (s) expressed by standard time_t */
-    double sec;         /* fraction of second under 1 s */
-} gtime_t;
-
-typedef struct {        /* observation data record */
-    gtime_t time;       /* receiver sampling time (GPST) */
-    unsigned char sat,rcv; /* satellite/receiver number */
-    unsigned char SNR [NFREQ+NEXOBS]; /* signal strength (0.25 dBHz) */
-    unsigned char LLI [NFREQ+NEXOBS]; /* loss of lock indicator */
-    unsigned char code[NFREQ+NEXOBS]; /* code indicator (CODE_???) */
-    double L[NFREQ+NEXOBS]; /* observation data carrier-phase (cycle) */
-    double P[NFREQ+NEXOBS]; /* observation data pseudorange (m) */
-    float  D[NFREQ+NEXOBS]; /* observation data doppler frequency (Hz) */
-} obsd_t;
-
-typedef struct {        /* observation data */
-    int n,nmax;         /* number of obervation data/allocated */
-    obsd_t *data;       /* observation data records */
-} obs_t;
-
 typedef struct {        /* earth rotation parameter data type */
     double mjd;         /* mjd (days) */
     double xp,yp;       /* pole offset (rad) */

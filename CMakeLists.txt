@@ -71,6 +71,9 @@ ${CMAKE_SOURCE_DIR}/src/sbas.cpp
 ${CMAKE_SOURCE_DIR}/src/solution.cpp
 ${CMAKE_SOURCE_DIR}/src/tides.cpp
 ${CMAKE_SOURCE_DIR}/src/rtklib.h
+${CMAKE_SOURCE_DIR}/src/gpstime.h
+${CMAKE_SOURCE_DIR}/src/obs_t.h
+${CMAKE_SOURCE_DIR}/src/obs_t.cpp
 )
 
 set(COMMIT_HASH "")
