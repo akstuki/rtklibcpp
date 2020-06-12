@@ -1203,7 +1203,7 @@ static int decode_Rx(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].P[j]=prm;
             raw->obuf.data[i].code[j]=type;
         }
@@ -1249,7 +1249,7 @@ static int decode_rx(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].P[j]=prm;
             raw->obuf.data[i].code[j]=type;
         }
@@ -1282,7 +1282,7 @@ static int decode_xR(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].P[j]=pr*CLIGHT+raw->prCA[sat-1];
             raw->obuf.data[i].code[j]=type;
         }
@@ -1318,7 +1318,7 @@ static int decode_xr(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].P[j]=prm;
             raw->obuf.data[i].code[j]=type;
         }
@@ -1350,7 +1350,7 @@ static int decode_Px(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].L[j]=cp;
             raw->obuf.data[i].code[j]=type;
         }
@@ -1382,7 +1382,7 @@ static int decode_px(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].L[j]=cp/1024.0;
             raw->obuf.data[i].code[j]=type;
         }
@@ -1415,7 +1415,7 @@ static int decode_xP(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             
             fn=freq_sys(sys,freq,raw->freqn[i]);
             cp=(rcp+raw->prCA[sat-1]/CLIGHT)*fn;
@@ -1452,7 +1452,7 @@ static int decode_xp(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             
             fn=freq_sys(sys,freq,raw->freqn[i]);
             cp=(rcp*P2_40+raw->prCA[sat-1]/CLIGHT)*fn;
@@ -1493,7 +1493,7 @@ static int decode_Dx(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].D[j]=(float)dop;
         }
     }
@@ -1526,7 +1526,7 @@ static int decode_xd(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             f1=freq_sys(sys,0   ,raw->freqn[i]);
             fn=freq_sys(sys,freq,raw->freqn[i]);
             dop=(-rdp+raw->dpCA[sat-1]*1E4)*fn/f1*1E-4;
@@ -1561,7 +1561,7 @@ static int decode_Ex(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].SNR[j]=(unsigned char)(cnr*4.0+0.5);
         }
     }
@@ -1592,7 +1592,7 @@ static int decode_xE(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
             raw->obuf.data[i].SNR[j]=cnr;
         }
     }
@@ -1624,7 +1624,7 @@ static int decode_Fx(raw_t *raw, char code)
         if ((freq=tofreq(code,sys,&type))<0) continue;
         
         if ((j=checkpri(raw->opt,sys,type,freq))>=0) {
-            if (!settag(raw->obuf.data+i,raw->time)) continue;
+            if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
 #if 0
             if (flags&0x20) { /* loss-of-lock potential */
                 raw->obuf.data[i].LLI[j]|=1;
@@ -1657,7 +1657,7 @@ static int decode_TC(raw_t *raw)
     for (i=0;i<raw->obuf.n&&i<MAXOBS;i++) {
         tt=U2(p); p+=2; if (tt==0xFFFF) continue;
         
-        if (!settag(raw->obuf.data+i,raw->time)) continue;
+        if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
         
         sat=raw->obuf.data[i].sat;
         tt_p=(unsigned short)raw->lockt[sat-1][0];

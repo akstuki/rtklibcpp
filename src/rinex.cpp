@@ -855,18 +855,7 @@ static void restslips(unsigned char slips[][NFREQ], obsd_t *data)
 /* add obs data --------------------------------------------------------------*/
 static int addobsdata(obs_t *obs, const obsd_t *data)
 {
-    obsd_t *obs_data;
-    
-    if (obs->nmax<=obs->n) {
-        if (obs->nmax<=0) obs->nmax=NINCOBS; else obs->nmax*=2;
-        if (!(obs_data=(obsd_t *)realloc(obs->data,sizeof(obsd_t)*obs->nmax))) {
-            trace(1,"addobsdata: memalloc error n=%dx%d\n",sizeof(obsd_t),obs->nmax);
-            free(obs->data); obs->data=NULL; obs->n=obs->nmax=0;
-            return -1;
-        }
-        obs->data=obs_data;
-    }
-    obs->data[obs->n++]=*data;
+   obs->addobsdata(data);
     return 1;
 }
 /* set system mask -----------------------------------------------------------*/
@@ -1705,13 +1694,12 @@ extern int init_rnxctr(rnxctr_t *rnx)
     
     trace(3,"init_rnxctr:\n");
     
-    rnx->obs.data=NULL;
+    rnx->obs.data.clear();
     rnx->nav.eph =NULL;
     rnx->nav.geph=NULL;
     rnx->nav.seph=NULL;
     
-    if (!(rnx->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS ))||
-        !(rnx->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT ))||
+    if (!(rnx->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT ))||
         !(rnx->nav.geph=(geph_t *)malloc(sizeof(geph_t)*NSATGLO))||
         !(rnx->nav.seph=(seph_t *)malloc(sizeof(seph_t)*NSATSBS))) {
         free_rnxctr(rnx);
@@ -1743,7 +1731,7 @@ extern void free_rnxctr(rnxctr_t *rnx)
 {
     trace(3,"free_rnxctr:\n");
     
-    free(rnx->obs.data); rnx->obs.data=NULL; rnx->obs.n =0;
+    rnx->obs.data.clear();
     free(rnx->nav.eph ); rnx->nav.eph =NULL; rnx->nav.n =0;
     free(rnx->nav.geph); rnx->nav.geph=NULL; rnx->nav.ng=0;
     free(rnx->nav.seph); rnx->nav.seph=NULL; rnx->nav.ns=0;
@@ -1802,7 +1790,7 @@ extern int input_rnxctr(rnxctr_t *rnx, FILE *fp)
     /* read rinex obs data */
     if (rnx->type=='O') {
         if ((n=readrnxobsb(fp,rnx->opt,rnx->ver,&rnx->tsys,rnx->tobs,&flag,
-                           rnx->obs.data,&rnx->sta))<=0) {
+                           &rnx->obs.data[0],&rnx->sta))<=0) {
             rnx->obs.n=0;
             return n<0?-2:0;
         }

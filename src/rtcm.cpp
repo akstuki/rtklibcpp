@@ -106,13 +106,12 @@ extern int init_rtcm(rtcm_t *rtcm)
     for (i=0;i<100;i++) rtcm->nmsg2[i]=0;
     for (i=0;i<400;i++) rtcm->nmsg3[i]=0;
     
-    rtcm->obs.data=NULL;
+    rtcm->obs.data.clear();
     rtcm->nav.eph =NULL;
     rtcm->nav.geph=NULL;
     
     /* reallocate memory for observation and ephemris buffer */
-    if (!(rtcm->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
-        !(rtcm->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT))||
+    if (!(rtcm->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT))||
         !(rtcm->nav.geph=(geph_t *)malloc(sizeof(geph_t)*MAXPRNGLO))) {
         free_rtcm(rtcm);
         return 0;
@@ -135,7 +134,7 @@ extern void free_rtcm(rtcm_t *rtcm)
     trace(3,"free_rtcm:\n");
     
     /* free memory for observation and ephemeris buffer */
-    free(rtcm->obs.data); rtcm->obs.data=NULL; rtcm->obs.n=0;
+    rtcm->obs.data.clear();
     free(rtcm->nav.eph ); rtcm->nav.eph =NULL; rtcm->nav.n=0;
     free(rtcm->nav.geph); rtcm->nav.geph=NULL; rtcm->nav.ng=0;
 }

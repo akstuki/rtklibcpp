@@ -218,11 +218,7 @@ constexpr double FREQ3_CMP = 1.26852E9 ;          /* BeiDou B3 frequency (Hz) */
 #endif
 #define MAXRCV      64                  /* max receiver number (1 to MAXRCV) */
 #define MAXOBSTYPE  64                  /* max number of obs type in RINEX */
-#ifdef OBS_100HZ
-#define DTTOL       0.005               /* tolerance of time difference (s) */
-#else
-#define DTTOL       0.025               /* tolerance of time difference (s) */
-#endif
+
 #define MAXDTOE     7200.0              /* max time difference to GPS Toe (s) */
 #define MAXDTOE_QZS 7200.0              /* max time difference to QZSS Toe (s) */
 #define MAXDTOE_GAL 14400.0             /* max time difference to Galileo Toe (s) */
@@ -1430,11 +1426,7 @@ EXPORT gtime_t bdt2time(int week, double sec);
 EXPORT double  time2bdt(gtime_t t, int *week);
 EXPORT char    *time_str(gtime_t t, int n);
 
-EXPORT gtime_t timeadd  (gtime_t t, double sec);
-gtime_t operator+(const gtime_t& t, double sec);
-gtime_t operator+(double sec, const gtime_t& t);
-EXPORT double  timediff (gtime_t t1, gtime_t t2);
-double operator-(const gtime_t& t1, const gtime_t& t2);
+
 EXPORT gtime_t gpst2utc (gtime_t t);
 EXPORT gtime_t utc2gpst (gtime_t t);
 EXPORT gtime_t gpst2bdt (gtime_t t);

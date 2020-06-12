@@ -3,8 +3,7 @@
 
 int obs_t::addobsdata(const obsd_t* d)
 {
-   _data.push_back(*d);
-   data = &_data[0];
-   n++;
+   data.push_back(*d);
+   ++n;
    return 1;
 }

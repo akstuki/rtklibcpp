@@ -894,8 +894,10 @@ extern int init_raw(raw_t *raw, int format)
     raw->opt[0]='\0';
     raw->format=-1;
     
-    raw->obs.data =NULL;
-    raw->obuf.data=NULL;
+    //raw->obs.data =NULL;
+    //raw->obuf.data=NULL;
+    raw->obs.data.clear();
+    raw->obuf.data.clear();
     raw->nav.eph  =NULL;
     raw->nav.alm  =NULL;
     raw->nav.geph =NULL;
@@ -903,8 +905,8 @@ extern int init_raw(raw_t *raw, int format)
     raw->half_cyc =NULL;
     raw->rcv_data =NULL;
     
-    if (!(raw->obs.data =(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
-        !(raw->obuf.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
+    if (/*!(raw->obs.data =(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
+        !(raw->obuf.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||*/
         !(raw->nav.eph  =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT))||
         !(raw->nav.alm  =(alm_t  *)malloc(sizeof(alm_t )*MAXSAT))||
         !(raw->nav.geph =(geph_t *)malloc(sizeof(geph_t)*NSATGLO))||
@@ -960,8 +962,10 @@ extern void free_raw(raw_t *raw)
     
     trace(3,"free_raw:\n");
     
-    free(raw->obs.data ); raw->obs.data =NULL; raw->obs.n =0;
-    free(raw->obuf.data); raw->obuf.data=NULL; raw->obuf.n=0;
+    //free(raw->obs.data ); raw->obs.data =NULL; raw->obs.n =0;
+    //free(raw->obuf.data); raw->obuf.data=NULL; raw->obuf.n=0;
+    raw->obs.data.clear();
+    raw->obuf.data.clear();
     free(raw->nav.eph  ); raw->nav.eph  =NULL; raw->nav.n =0;
     free(raw->nav.alm  ); raw->nav.alm  =NULL; raw->nav.na=0;
     free(raw->nav.geph ); raw->nav.geph =NULL; raw->nav.ng=0;

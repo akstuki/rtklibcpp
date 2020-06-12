@@ -1868,7 +1868,7 @@ static int DecodeType17(raw_t *Raw, unsigned int rif)
     if (n > 0)
     {
         tracet(2, "RT17: Observations output:\n");
-        traceobs(2, Raw->obs.data, Raw->obs.n);
+        traceobs(2, &Raw->obs.data[0], Raw->obs.n);
     }
 
     return (n > 0);

@@ -2485,7 +2485,7 @@ static int OutputCmrObs(raw_t *Raw, obsb_t *Obs)
     if (Raw->obs.n > 0)
     {
         tracet(2, "CMR: Base observations referenced and output:\n");
-        traceobs(2, Raw->obs.data, Raw->obs.n);
+        traceobs(2, &Raw->obs.data[0], Raw->obs.n);
     }
 
     return (Ret < 0) ? Ret : (Raw->obs.n > 0);

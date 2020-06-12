@@ -137,6 +137,7 @@
 #include <sys/types.h>
 #endif
 #include "rtklib.h"
+#include <algorithm>
 
 /* constants -----------------------------------------------------------------*/
 
@@ -2652,13 +2653,13 @@ extern void uniqnav(nav_t *nav)
     }
 }
 /* compare observation data -------------------------------------------------*/
-static int cmpobs(const void *p1, const void *p2)
+static int cmpobs(const obsd_t& q1, const obsd_t& q2)
 {
-    obsd_t *q1=(obsd_t *)p1,*q2=(obsd_t *)p2;
-    double tt=timediff(q1->time,q2->time);
-    if (fabs(tt)>DTTOL) return tt<0?-1:1;
-    if (q1->rcv!=q2->rcv) return (int)q1->rcv-(int)q2->rcv;
-    return (int)q1->sat-(int)q2->sat;
+   // obsd_t *q1 = (obsd_t *)p1, *q2 = (obsd_t *)p2;
+   double tt = timediff(q1.time, q2.time);
+   if (fabs(tt) > DTTOL) return tt < 0 ? -1 : 1;
+   if (q1.rcv != q2.rcv) return (int)q1.rcv - (int)q2.rcv;
+   return (int)q1.sat - (int)q2.sat;
 }
 /* sort and unique observation data --------------------------------------------
 * sort and unique observation data by time, rcv, sat
@@ -2673,7 +2674,8 @@ extern int sortobs(obs_t *obs)
     
     if (obs->n<=0) return 0;
     
-    qsort(obs->data,obs->n,sizeof(obsd_t),cmpobs);
+    // qsort(&obs->data[0],obs->n,sizeof(obsd_t),cmpobs);
+    std::sort(obs->data.begin(), obs->data.end(), cmpobs);
     
     /* delete duplicated data */
     for (i=j=0;i<obs->n;i++) {
@@ -2836,7 +2838,7 @@ extern int savenav(const char *file, const nav_t *nav)
 *-----------------------------------------------------------------------------*/
 extern void freeobs(obs_t *obs)
 {
-    free(obs->data); obs->data=NULL; obs->n=obs->nmax=0;
+   obs->data.clear();
 }
 /* free navigation data ---------------------------------------------------------
 * free memory for navigation data

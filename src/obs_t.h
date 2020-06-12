@@ -11,7 +11,14 @@
 #define NEXOBS      0                   /* number of extended obs codes */
 #endif
 
-typedef struct {        /* observation data record */
+#ifdef OBS_100HZ
+#define DTTOL       0.005               /* tolerance of time difference (s) */
+#else
+#define DTTOL       0.025               /* tolerance of time difference (s) */
+#endif
+
+class obsd_t {        /* observation data record */
+public:
    gtime_t time;       /* receiver sampling time (GPST) */
    unsigned char sat, rcv; /* satellite/receiver number */
    unsigned char SNR[NFREQ + NEXOBS]; /* signal strength (0.25 dBHz) */
@@ -20,14 +27,18 @@ typedef struct {        /* observation data record */
    double L[NFREQ + NEXOBS]; /* observation data carrier-phase (cycle) */
    double P[NFREQ + NEXOBS]; /* observation data pseudorange (m) */
    float  D[NFREQ + NEXOBS]; /* observation data doppler frequency (Hz) */
-} obsd_t;
+   bool operator<(const obsd_t& r)  const {
+      double tt = time-r.time;
+      if (fabs(tt) > DTTOL) return tt < 0 ? -1 : 1;
+      if (rcv != r.rcv) return (int)rcv - (int)r.rcv;
+      return (int)sat - (int)r.sat;
+   }
+} ;
 
 class obs_t {
 public:
    int addobsdata(const obsd_t* data);
 
    int n = 0;            /* number of obervation data */
-   int nmax = 0;         /* number of obervation data/allocated */
-   obsd_t* data = 0;     /* observation data records */
-   std::vector<obsd_t> _data;
+   std::vector<obsd_t> data;
 };

@@ -355,7 +355,7 @@ static int encode_type1001(rtcm_t *rtcm, int sync)
         if (sys==SYS_SBS) prn-=80; /* 40-58: sbas 120-138 */
         
         /* generate obs field data gps */
-        gen_obs_gps(rtcm,rtcm->obs.data+j,&code1,&pr1,&ppr1,&lock1,&amb,NULL,
+        gen_obs_gps(rtcm,&rtcm->obs.data[j],&code1,&pr1,&ppr1,&lock1,&amb,NULL,
                     NULL,NULL,NULL,NULL,NULL);
         
         setbitu(rtcm->buff,i, 6,prn  ); i+= 6;
@@ -390,7 +390,7 @@ static int encode_type1002(rtcm_t *rtcm, int sync)
         if (sys==SYS_SBS) prn-=80; /* 40-58: sbas 120-138 */
         
         /* generate obs field data gps */
-        gen_obs_gps(rtcm,rtcm->obs.data+j,&code1,&pr1,&ppr1,&lock1,&amb,&cnr1,
+        gen_obs_gps(rtcm,&rtcm->obs.data[j],&code1,&pr1,&ppr1,&lock1,&amb,&cnr1,
                     NULL,NULL,NULL,NULL,NULL);
         
         setbitu(rtcm->buff,i, 6,prn  ); i+= 6;
@@ -427,7 +427,7 @@ static int encode_type1003(rtcm_t *rtcm, int sync)
         if (sys==SYS_SBS) prn-=80; /* 40-58: sbas 120-138 */
         
         /* generate obs field data gps */
-        gen_obs_gps(rtcm,rtcm->obs.data+j,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_gps(rtcm,&rtcm->obs.data[j],&code1,&pr1,&ppr1,&lock1,&amb,
                     NULL,&code2,&pr21,&ppr2,&lock2,NULL);
         
         setbitu(rtcm->buff,i, 6,prn  ); i+= 6;
@@ -466,7 +466,7 @@ static int encode_type1004(rtcm_t *rtcm, int sync)
         if (sys==SYS_SBS) prn-=80; /* 40-58: sbas 120-138 */
         
         /* generate obs field data gps */
-        gen_obs_gps(rtcm,rtcm->obs.data+j,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_gps(rtcm,&rtcm->obs.data[j],&code1,&pr1,&ppr1,&lock1,&amb,
                     &cnr1,&code2,&pr21,&ppr2,&lock2,&cnr2);
         
         setbitu(rtcm->buff,i, 6,prn  ); i+= 6;
@@ -607,7 +607,7 @@ static int encode_type1009(rtcm_t *rtcm, int sync)
         fcn=fcn_glo(sat,rtcm);
         
         /* generate obs field data glonass */
-        gen_obs_glo(rtcm,rtcm->obs.data+j,fcn,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_glo(rtcm,&rtcm->obs.data[j],fcn,&code1,&pr1,&ppr1,&lock1,&amb,
                     NULL,NULL,NULL,NULL,NULL,NULL);
         
         if (fcn<0) fcn=0;
@@ -643,7 +643,7 @@ static int encode_type1010(rtcm_t *rtcm, int sync)
         fcn=fcn_glo(sat,rtcm);
         
         /* generate obs field data glonass */
-        gen_obs_glo(rtcm,rtcm->obs.data+j,fcn,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_glo(rtcm,&rtcm->obs.data[j],fcn,&code1,&pr1,&ppr1,&lock1,&amb,
                     &cnr1,NULL,NULL,NULL,NULL,NULL);
         
         if (fcn<0) fcn=0;
@@ -681,7 +681,7 @@ static int encode_type1011(rtcm_t *rtcm, int sync)
         fcn=fcn_glo(sat,rtcm);
         
         /* generate obs field data glonass */
-        gen_obs_glo(rtcm,rtcm->obs.data+j,fcn,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_glo(rtcm,&rtcm->obs.data[j],fcn,&code1,&pr1,&ppr1,&lock1,&amb,
                     NULL,&code2,&pr21,&ppr2,&lock2,NULL);
         
         if (fcn<0) fcn=0;
@@ -721,7 +721,7 @@ static int encode_type1012(rtcm_t *rtcm, int sync)
         fcn=fcn_glo(sat,rtcm);
         
         /* generate obs field data glonass */
-        gen_obs_glo(rtcm,rtcm->obs.data+j,fcn,&code1,&pr1,&ppr1,&lock1,&amb,
+        gen_obs_glo(rtcm,&rtcm->obs.data[j],fcn,&code1,&pr1,&ppr1,&lock1,&amb,
                     &cnr1,&code2,&pr21,&ppr2,&lock2,&cnr2);
         
         if (fcn<0) fcn=0;
@@ -1807,7 +1807,7 @@ static void gen_msm_sat(rtcm_t *rtcm, int sys, int nsat,
     for (i=0;i<64;i++) rrng[i]=rrate[i]=0.0;
     
     for (i=0;i<rtcm->obs.n;i++) {
-        data=rtcm->obs.data+i;
+        data=&rtcm->obs.data[i];
         if (!(sat=to_satid(sys,data->sat))) continue;
         fcn=fcn_glo(data->sat,rtcm);
         
@@ -1846,7 +1846,7 @@ static void gen_msm_sig(rtcm_t *rtcm, int sys, int nsat, int nsig, int ncell,
         if (rate ) rate [i]=0.0;
     }
     for (i=0;i<rtcm->obs.n;i++) {
-        data=rtcm->obs.data+i;
+        data=&rtcm->obs.data[i];
         
         if (!(sat=to_satid(sys,data->sat))) continue;
         

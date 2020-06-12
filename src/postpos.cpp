@@ -663,7 +663,7 @@ static int readobsnav(gtime_t ts, gtime_t te, double ti, char **infile,
     
     trace(3,"readobsnav: ts=%s n=%d\n",time_str(ts,0),n);
     
-    obs->data=NULL; obs->n =obs->nmax =0;
+    obs->data.clear();
     nav->eph =NULL; nav->n =nav->nmax =0;
     nav->geph=NULL; nav->ng=nav->ngmax=0;
     nav->seph=NULL; nav->ns=nav->nsmax=0;
@@ -717,7 +717,7 @@ static void freeobsnav(obs_t *obs, nav_t *nav)
 {
     trace(3,"freeobsnav:\n");
     
-    free(obs->data); obs->data=NULL; obs->n =obs->nmax =0;
+    obs->data.clear();
     free(nav->eph ); nav->eph =NULL; nav->n =nav->nmax =0;
     free(nav->geph); nav->geph=NULL; nav->ng=nav->ngmax=0;
     free(nav->seph); nav->seph=NULL; nav->ns=nav->nsmax=0;
