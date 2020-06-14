@@ -213,9 +213,7 @@ constexpr double FREQ3_CMP = 1.26852E9 ;          /* BeiDou B3 frequency (Hz) */
                                         /* max satellite number (1 to MAXSAT) */
 #define MAXSTA      255
 
-#ifndef MAXOBS
-#define MAXOBS      64                  /* max number of obs in an epoch */
-#endif
+
 #define MAXRCV      64                  /* max receiver number (1 to MAXRCV) */
 #define MAXOBSTYPE  64                  /* max number of obs type in RINEX */
 

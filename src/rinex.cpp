@@ -1045,7 +1045,7 @@ static int readrnxobs(FILE *fp, gtime_t ts, gtime_t te, double tint,
             if ((stat=addobsdata(obs,data+i))<0) break;
         }
     }
-    trace(4,"readrnxobs: nobs=%d stat=%d\n",obs->n,stat);
+    trace(4,"readrnxobs: nobs=%d stat=%d\n",obs->count(),stat);
     
     free(data);
     
@@ -1709,7 +1709,7 @@ extern int init_rnxctr(rnxctr_t *rnx)
     rnx->ver=0.0;
     rnx->sys=rnx->tsys=0;
     for (i=0;i<6;i++) for (j=0;j<MAXOBSTYPE;j++) rnx->tobs[i][j][0]='\0';
-    rnx->obs.n=0;
+    rnx->obs.data.clear();
     rnx->nav.n=MAXSAT;
     rnx->nav.ng=NSATGLO;
     rnx->nav.ns=NSATSBS;
@@ -1791,7 +1791,7 @@ extern int input_rnxctr(rnxctr_t *rnx, FILE *fp)
     if (rnx->type=='O') {
         if ((n=readrnxobsb(fp,rnx->opt,rnx->ver,&rnx->tsys,rnx->tobs,&flag,
                            &rnx->obs.data[0],&rnx->sta))<=0) {
-            rnx->obs.n=0;
+            rnx->obs.data.clear();
             return n<0?-2:0;
         }
         rnx->time=rnx->obs.data[0].time;

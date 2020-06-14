@@ -914,8 +914,8 @@ extern int init_raw(raw_t *raw, int format)
         free_raw(raw);
         return 0;
     }
-    raw->obs.n =0;
-    raw->obuf.n=0;
+    raw->obs.data.clear();
+    raw->obuf.data.clear();
     raw->nav.n =MAXSAT;
     raw->nav.na=MAXSAT;
     raw->nav.ng=NSATGLO;

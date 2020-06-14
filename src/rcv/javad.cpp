@@ -1650,11 +1650,11 @@ static int decode_TC(raw_t *raw)
         trace(2,"javad TC checksum error: len=%d\n",raw->len);
         return -1;
     }
-    if (raw->len!=raw->obuf.n*2+6) {
-        trace(2,"javad TC length error: n=%d len=%d\n",raw->obuf.n,raw->len);
+    if (raw->len!=raw->obuf.count()*2+6) {
+        trace(2,"javad TC length error: n=%d len=%d\n",raw->obuf.count(),raw->len);
         return -1;
     }
-    for (i=0;i<raw->obuf.n&&i<MAXOBS;i++) {
+    for (i=0;i<raw->obuf.count()&&i<MAXOBS;i++) {
         tt=U2(p); p+=2; if (tt==0xFFFF) continue;
         
         if (!settag(&(raw->obuf.data[i]),raw->time)) continue;
@@ -1820,7 +1820,7 @@ extern int input_javad(raw_t *raw, unsigned char data)
 static void startfile(raw_t *raw)
 {
     raw->tod=-1;
-    raw->obuf.n=0;
+    raw->obuf.data.clear();
     raw->buff[4]='\n';
 }
 /* end input file ------------------------------------------------------------*/
@@ -1828,7 +1828,7 @@ static int endfile(raw_t *raw)
 {
     /* flush observation data buffer */
     if (!flushobuf(raw)) return -2;
-    raw->obuf.n=0;
+    raw->obuf.data.clear();
     return 1;
 }
 /* input javad raw message from file -------------------------------------------

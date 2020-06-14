@@ -142,22 +142,7 @@ static gtime_t adjweek(gtime_t time, double tow)
 /* get observation data index ------------------------------------------------*/
 static int obsindex(obs_t *obs, gtime_t time, int sat)
 {
-    int i,j;
-    
-    if (obs->n>=MAXOBS) return -1;
-    for (i=0;i<obs->n;i++) {
-        if (obs->data[i].sat==sat) return i;
-    }
-    obs->data[i].time=time;
-    obs->data[i].sat=sat;
-    for (j=0;j<NFREQ+NEXOBS;j++) {
-        obs->data[i].L[j]=obs->data[i].P[j]=0.0;
-        obs->data[i].D[j]=0.0;
-        obs->data[i].SNR[j]=obs->data[i].LLI[j]=0;
-        obs->data[i].code[j]=CODE_NONE;
-    }
-    obs->n++;
-    return i;
+    return obs->obsindex(time,sat);
 }
 /* ura value (m) to ura index ------------------------------------------------*/
 static int uraindex(double value)
@@ -1124,7 +1109,7 @@ static int decode_rgeb(raw_t *raw)
         raw->halfc[sat-1][freq]=parity;
         
         if (fabs(timediff(raw->obs.data[0].time,raw->time))>1E-9) {
-            raw->obs.n=0;
+            raw->obs.data.clear();
         }        
         if ((index=obsindex(&raw->obs,raw->time,sat))>=0) {
             raw->obs.data[index].L  [freq]=-adr; /* flip sign */

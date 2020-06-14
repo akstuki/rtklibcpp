@@ -30,23 +30,8 @@ static void adjhour(rtcm_t *rtcm, double zcnt)
 /* get observation data index ------------------------------------------------*/
 static int obsindex(obs_t *obs, gtime_t time, int sat)
 {
-    int i,j;
-    
-    for (i=0;i<obs->n;i++) {
-        if (obs->data[i].sat==sat) return i; /* field already exists */
-    }
-    if (i>=MAXOBS) return -1; /* overflow */
-    
-    /* add new field */
-    obs->data[i].time=time;
-    obs->data[i].sat=sat;
-    for (j=0;j<NFREQ;j++) {
-        obs->data[i].L[j]=obs->data[i].P[j]=0.0;
-        obs->data[i].D[j]=0.0;
-        obs->data[i].SNR[j]=obs->data[i].LLI[j]=obs->data[i].code[j]=0;
-    }
-    obs->n++;
-    return i;
+   return obs->obsindex(time, sat);
+
 }
 /* decode type 1/9: differential gps correction/partial correction set -------*/
 static int decode_type1(rtcm_t *rtcm)
@@ -267,7 +252,7 @@ static int decode_type19(rtcm_t *rtcm)
     }
     freq>>=1;
     
-    while (i+48<=rtcm->len*8&&rtcm->obs.n<MAXOBS) {
+    while (i+48<=rtcm->len*8&&rtcm->obs.count()<MAXOBS) {
         sync=getbitu(rtcm->buff,i, 1); i+= 1;
         code=getbitu(rtcm->buff,i, 1); i+= 1;
         sys =getbitu(rtcm->buff,i, 1); i+= 1;

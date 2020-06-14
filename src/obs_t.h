@@ -17,8 +17,13 @@
 #define DTTOL       0.025               /* tolerance of time difference (s) */
 #endif
 
+#ifndef MAXOBS
+#define MAXOBS      64                  /* max number of obs in an epoch */
+#endif
+
 class obsd_t {        /* observation data record */
 public:
+   obsd_t();
    gtime_t time;       /* receiver sampling time (GPST) */
    unsigned char sat, rcv; /* satellite/receiver number */
    unsigned char SNR[NFREQ + NEXOBS]; /* signal strength (0.25 dBHz) */
@@ -38,7 +43,12 @@ public:
 class obs_t {
 public:
    int addobsdata(const obsd_t* data);
+   int count() const;
+   /* add new field */
+   void add_new_field(const gtime_t& time, int sat);
+   /* get observation data index ------------------------------------------------*/
+   int obsindex(const gtime_t& time, int sat);
 
-   int n = 0;            /* number of obervation data */
+   //int n = 0;            /* number of obervation data */
    std::vector<obsd_t> data;
 };

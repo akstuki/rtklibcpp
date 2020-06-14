@@ -116,7 +116,7 @@ extern int init_rtcm(rtcm_t *rtcm)
         free_rtcm(rtcm);
         return 0;
     }
-    rtcm->obs.n=0;
+    rtcm->obs.data.clear();
     rtcm->nav.n=MAXSAT;
     rtcm->nav.ng=MAXPRNGLO;
     for (i=0;i<MAXOBS   ;i++) rtcm->obs.data[i]=data0;

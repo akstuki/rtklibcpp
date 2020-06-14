@@ -142,8 +142,8 @@ static void outheader(FILE *fp, char **file, int n, const prcopt_t *popt,
         for (i=0;i<n;i++) {
             fprintf(fp,"%s inp file  : %s\n",COMMENTH,file[i]);
         }
-        for (i=0;i<obss.n;i++)    if (obss.data[i].rcv==1) break;
-        for (j=obss.n-1;j>=0;j--) if (obss.data[j].rcv==1) break;
+        for (i=0;i<obss.count();i++)    if (obss.data[i].rcv==1) break;
+        for (j=obss.count()-1;j>=0;j--) if (obss.data[j].rcv==1) break;
         if (j<i) {fprintf(fp,"\n%s no rover obs data\n",COMMENTH); return;}
         ts=obss.data[i].time;
         te=obss.data[j].time;
@@ -176,8 +176,8 @@ static int nextobsf(const obs_t *obs, int *i, int rcv)
     double tt;
     int n;
     
-    for (;*i<obs->n;(*i)++) if (obs->data[*i].rcv==rcv) break;
-    for (n=0;*i+n<obs->n;n++) {
+    for (;*i<obs->count();(*i)++) if (obs->data[*i].rcv==rcv) break;
+    for (n=0;*i+n<obs->count();n++) {
         tt=timediff(obs->data[*i+n].time,obs->data[*i].time);
         if (obs->data[*i+n].rcv!=rcv||tt>DTTOL) break;
     }
@@ -239,7 +239,7 @@ static int inputobs(obsd_t *obs, int solq, const prcopt_t *popt)
     
     trace(3,"infunc  : revs=%d iobsu=%d iobsr=%d isbs=%d\n",revs,iobsu,iobsr,isbs);
     
-    if (0<=iobsu&&iobsu<obss.n) {
+    if (0<=iobsu&&iobsu<obss.count()) {
         settime((time=obss.data[iobsu].time));
         if (checkbrk("processing : %s Q=%d",time_str(time,0),solq)) {
             aborts=1; showmsg("aborted"); return -1;
@@ -684,7 +684,7 @@ static int readobsnav(gtime_t ts, gtime_t te, double ti, char **infile,
             return 0;
         }
     }
-    if (obs->n<=0) {
+    if (obs->count()<=0) {
         checkbrk("error : no obs data");
         trace(1,"\n");
         return 0;
@@ -702,8 +702,8 @@ static int readobsnav(gtime_t ts, gtime_t te, double ti, char **infile,
     
     /* set time span for progress display */
     if (ts.time==0||te.time==0) {
-        for (i=0;   i<obs->n;i++) if (obs->data[i].rcv==1) break;
-        for (j=obs->n-1;j>=0;j--) if (obs->data[j].rcv==1) break;
+        for (i=0;   i<obs->count();i++) if (obs->data[i].rcv==1) break;
+        for (j=obs->count()-1;j>=0;j--) if (obs->data[j].rcv==1) break;
         if (i<j) {
             if (ts.time==0) ts=obs->data[i].time;
             if (te.time==0) te=obs->data[j].time;
@@ -732,7 +732,7 @@ static int avepos(double *ra, int rcv, const obs_t *obs, const nav_t *nav,
     int i,j,n=0,m,iobs;
     char msg[128];
     
-    trace(3,"avepos: rcv=%d obs.n=%d\n",rcv,obs->n);
+    trace(3,"avepos: rcv=%d obs.n=%d\n",rcv,obs->count());
     
     for (i=0;i<3;i++) ra[i]=0.0;
     
@@ -1023,7 +1023,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
     }
     /* set antenna paramters */
     if (popt_.mode!=PMODE_SINGLE) {
-        setpcv(obss.n>0?obss.data[0].time:timeget(),&popt_,&navs,&pcvss,&pcvsr,
+        setpcv(obss.count()>0?obss.data[0].time:timeget(),&popt_,&navs,&pcvss,&pcvsr,
                stas);
     }
     /* read ocean tide loading parameters */
@@ -1065,7 +1065,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
     }
     else if (popt_.soltype==1) {
         if ((fp=openfile(outfile))) {
-            revs=1; iobsu=iobsr=obss.n-1; isbs=sbss.n-1; ilex=lexs.n-1;
+            revs=1; iobsu=iobsr=obss.count()-1; isbs=sbss.n-1; ilex=lexs.n-1;
             procpos(fp,&popt_,sopt,0); /* backward */
             fclose(fp);
         }
@@ -1079,7 +1079,7 @@ static int execses(gtime_t ts, gtime_t te, double ti, const prcopt_t *popt,
         if (solf&&solb) {
             isolf=isolb=0;
             procpos(NULL,&popt_,sopt,1); /* forward */
-            revs=1; iobsu=iobsr=obss.n-1; isbs=sbss.n-1; ilex=lexs.n-1;
+            revs=1; iobsu=iobsr=obss.count()-1; isbs=sbss.n-1; ilex=lexs.n-1;
             procpos(NULL,&popt_,sopt,1); /* backward */
             
             /* combine forward/backward solutions */
