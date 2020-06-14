@@ -44,6 +44,8 @@
 #else
 #include <pthread.h>
 #endif
+
+#include "TimeUtiility.h"
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
@@ -62,8 +64,9 @@
 
 #define COPYRIGHT_RTKLIB \
             "Copyright (C) 2007-2019 T.Takasu\nAll rights reserved."
-
+#ifndef PI
 #define PI          3.1415926535897932  /* pi */
+#endif
 #define D2R         (PI/180.0)          /* deg to rad */
 #define R2D         (180.0/PI)          /* rad to deg */
 #define CLIGHT      299792458.0         /* speed of light (m/s) */
@@ -258,7 +261,6 @@
 #define MAXSOLBUF   256                 /* max number of solution buffer */
 #define MAXOBSBUF   128                 /* max number of observation data buffer */
 #define MAXNRPOS    16                  /* max number of reference positions */
-#define MAXLEAPS    64                  /* max number of leap seconds table */
 #define MAXGISLAYER 32                  /* max number of GIS data layers */
 #define MAXRCVCMD   4096                /* max length of receiver commands */
 
@@ -525,10 +527,7 @@
 
 /* type definitions ----------------------------------------------------------*/
 
-typedef struct {        /* time struct */
-    time_t time;        /* time (s) expressed by standard time_t */
-    double sec;         /* fraction of second under 1 s */
-} gtime_t;
+
 
 typedef struct {        /* observation data record */
     gtime_t time;       /* receiver sampling time (GPST) */
@@ -1442,43 +1441,10 @@ EXPORT void matfprint(const double *A, int n, int m, int p, int q, FILE *fp);
 
 EXPORT void add_fatal(fatalfunc_t *func);
 
-/* time and string functions -------------------------------------------------*/
-EXPORT double  str2num(const char *s, int i, int n);
-EXPORT int     str2time(const char *s, int i, int n, gtime_t *t);
-EXPORT void    time2str(gtime_t t, char *str, int n);
-EXPORT gtime_t epoch2time(const double *ep);
-EXPORT void    time2epoch(gtime_t t, double *ep);
-EXPORT gtime_t gpst2time(int week, double sec);
-EXPORT double  time2gpst(gtime_t t, int *week);
-EXPORT gtime_t gst2time(int week, double sec);
-EXPORT double  time2gst(gtime_t t, int *week);
-EXPORT gtime_t bdt2time(int week, double sec);
-EXPORT double  time2bdt(gtime_t t, int *week);
-EXPORT char    *time_str(gtime_t t, int n);
-
-EXPORT gtime_t timeadd  (gtime_t t, double sec);
-gtime_t operator+(const gtime_t& t, double sec);
-gtime_t operator+(double sec, const gtime_t& t);
-EXPORT double  timediff (gtime_t t1, gtime_t t2);
-double operator-(const gtime_t& t1, const gtime_t& t2);
-EXPORT gtime_t gpst2utc (gtime_t t);
-EXPORT gtime_t utc2gpst (gtime_t t);
-EXPORT gtime_t gpst2bdt (gtime_t t);
-EXPORT gtime_t bdt2gpst (gtime_t t);
-EXPORT gtime_t timeget  (void);
-EXPORT void    timeset  (gtime_t t);
-EXPORT double  time2doy (gtime_t t);
-EXPORT double  utc2gmst (gtime_t t, double ut1_utc);
-EXPORT int read_leaps(const char *file);
-
-EXPORT int adjgpsweek(int week);
-EXPORT unsigned int tickget(void);
-EXPORT void sleepms(int ms);
-
-EXPORT int reppath(const char *path, char *rpath, gtime_t time, const char *rov,
-                   const char *base);
-EXPORT int reppaths(const char *path, char *rpaths[], int nmax, gtime_t ts,
-                    gtime_t te, const char *rov, const char *base);
+int reppath(const char* path, char* rpath, gtime_t time, const char* rov,
+   const char* base);
+int reppaths(const char* path, char* rpaths[], int nmax, gtime_t ts,
+   gtime_t te, const char* rov, const char* base);
 
 /* coordinates transformation ------------------------------------------------*/
 EXPORT void ecef2pos(const double *r, double *pos);
